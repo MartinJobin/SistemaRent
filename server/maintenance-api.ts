@@ -6,8 +6,27 @@ type MaintenanceStatus = "Pendiente" | "Completado" | "No realizado" | "Eliminad
 type HistoryEntry = { action: "Creado" | "Completado" | "No realizado" | "Eliminado" | "Reprogramado" | "Editado"; observation: string; at: string; previousDueOdometer?: number | null; dueOdometer?: number | null; previousDueDate?: string; dueDate?: string };
 type Reminder = { id: string; plate: string; chassis: string; type: string; dueDate: string; dueOdometer: number | null; notes: string; status: MaintenanceStatus; createdAt: string; updatedAt?: string; closedAt?: string; closingObservation?: string; history?: HistoryEntry[]; manager?: string; lastMaintenanceDate?: string; lastMaintenanceOdometer?: number; lastRoutine?: number; frequency?: number; brand?: string; model?: string; client?: string; fleetStatus?: string; source?: string; performedOdometer?: number; serviceLocation?: string; parentMaintenanceId?: string };
 
-const read = (): Promise<Reminder[]> => readJson<Reminder[]>("app/maintenance.json", []);
 const save = (items: Reminder[]) => writeJson("app/maintenance.json", items);
+export const migrateMaintenanceRoutines = (items: Reminder[]) => {
+  let changed = false;
+  for (const item of items) {
+    if (item.lastRoutine != null || item.source !== "Frecuencias de mantenimiento Titania.xlsx") continue;
+    const match = String(item.notes || "").match(/rutina:\s*([\d.,]+)/i);
+    const parsed = match ? Number(match[1].replace(/\./g, "").replace(",", ".")) : NaN;
+    const fallback = Number(item.dueOdometer) - Number(item.frequency);
+    const lastRoutine = Number.isFinite(parsed) ? parsed : fallback;
+    if (!Number.isFinite(lastRoutine) || lastRoutine < 0) continue;
+    item.lastRoutine = lastRoutine;
+    if (Number(item.frequency) > 0 && item.status === "Pendiente") item.dueOdometer = lastRoutine + Number(item.frequency);
+    changed = true;
+  }
+  return changed;
+};
+const read = async (): Promise<Reminder[]> => {
+  const items = await readJson<Reminder[]>("app/maintenance.json", []);
+  if (migrateMaintenanceRoutines(items)) await save(items);
+  return items;
+};
 const send = (res: ServerResponse, status: number, data: unknown) => { res.statusCode = status; res.setHeader("Content-Type", "application/json; charset=utf-8"); res.setHeader("Cache-Control", "no-store"); res.end(JSON.stringify(data)); };
 const body = async (req: IncomingMessage) => { const chunks: Buffer[] = []; for await (const chunk of req) chunks.push(Buffer.from(chunk)); return JSON.parse(Buffer.concat(chunks).toString("utf8") || "{}"); };
 
