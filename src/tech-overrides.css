@@ -1,0 +1,18 @@
+.rent-loader-mark{font:italic 900 clamp(60px,9vw,112px) Manrope,"Segoe UI",sans-serif;letter-spacing:-7px;padding-right:10px;filter:drop-shadow(0 0 18px #12a9c766)}
+.rent-loader-mark:after{content:"Rent";color:transparent;background:linear-gradient(105deg,#075f77 0%,#18c0dc 55%,#08738c 78%,#e5007d 100%);background-clip:text;-webkit-background-clip:text}
+.loader-stage:after{content:none!important}
+.loader-stage{width:min(380px,72vw);height:min(380px,72vw);max-height:62vh}
+.loader-stage:after{content:"SISTEMA EN LÍNEA";position:absolute;left:50%;bottom:-20px;transform:translateX(-50%);color:#8bdcea;font:700 8px monospace;letter-spacing:4px;white-space:nowrap;animation:fadePulse 1.8s infinite}
+.insight-filter-bar{grid-column:1/-1;padding:16px 18px;display:flex;align-items:end;gap:14px;background:linear-gradient(115deg,#f9fdfe,#edf8fa)}
+.insight-filter-bar>div{display:flex;align-items:center;gap:10px;flex:1;min-width:240px}
+.insight-filter-bar>div>span{width:39px;height:39px;border-radius:11px;background:linear-gradient(135deg,#08738c,#11a4bd);color:#fff;display:grid;place-items:center;box-shadow:0 8px 20px #08738c2e}
+.insight-filter-bar svg{width:18px}.insight-filter-bar>div>div{display:flex;flex-direction:column}
+.insight-filter-bar b{font-size:12px;color:var(--rent-ink)}.insight-filter-bar small{font-size:9px;color:#708791;margin-top:3px}
+.insight-filter-bar label{display:flex;flex-direction:column;gap:5px;font-size:8px;text-transform:uppercase;font-weight:800;color:#607984}
+.insight-filter-bar select{height:39px;min-width:190px;border:1px solid var(--rent-line);border-radius:8px;background:#fff;padding:0 10px;color:var(--rent-ink)}
+.insight-filter-bar .secondary{height:39px}
+body{background-color:var(--rent-bg);background-image:linear-gradient(#08738c08 1px,transparent 1px),linear-gradient(90deg,#08738c08 1px,transparent 1px);background-size:32px 32px}
+.panel{transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}.panel:hover{border-color:#bcd9e2;box-shadow:0 14px 38px #0b536716}
+header:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,#0ca0b8aa,#e5007d77,transparent)}
+@media(max-width:900px){.insight-filter-bar{flex-wrap:wrap}.insight-filter-bar>div{flex-basis:100%}.insight-filter-bar label{flex:1}.insight-filter-bar select{width:100%;min-width:0}}
+@media(max-width:560px){.insight-filter-bar{align-items:stretch}.insight-filter-bar label{flex-basis:100%}}
